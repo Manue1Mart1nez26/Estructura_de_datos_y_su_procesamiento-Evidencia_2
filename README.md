@@ -12,4 +12,4 @@
 
 ## Licencia
 
-[estructura-de-datos-y-su-procesamiento-evidencia-2](https://github.com/Manue1Mart1nez26/Estructura_de_datos_y_su_procesamiento-Evidencia_2) are released under [MIT license](https://github.com/Manue1Mart1nez26/estructura-de-datos-y-su-procesamiento-evidencia-1/blob/main/LICENSE).
+[estructura-de-datos-y-su-procesamiento-evidencia-2](https://github.com/Manue1Mart1nez26/Estructura_de_datos_y_su_procesamiento-Evidencia_2) are released under [MIT license](https://github.com/Manue1Mart1nez26/Estructura_de_datos_y_su_procesamiento-Evidencia_2/blob/main/LICENSE).
