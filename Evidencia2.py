@@ -4,13 +4,15 @@ Evidencia 2, Estructura de datos y su procesamiento.
 from typing import List
 import pandas as pd
 from collections import namedtuple
-
-
+from datetime import datetime
+import os
+import csv
 
 Ventas = namedtuple("Ventas",["Articulo","CantidadVenta","PrecioVenta","FechaVenta"])
 DiccionarioVentas = {}
 DiccionarioPrecios = {"Juego de llantas 1":[400], "Juego de llantas 2":[600]}
 notas_Precios = pd.DataFrame(DiccionarioPrecios)
+notas_ventas = pd.DataFrame(data=DiccionarioVentas)
 
 
 while True:
@@ -18,7 +20,9 @@ while True:
     print("1) Ver precios")#Lista o menu con los articulos y precios que se visualiza
     print("2) Agregar una Venta") #Registrar una venta y dentro los articulos
     print("3) Búsqueda específica") #Consultar una venta
-    print("4) Salir")
+    print("4) Búsqueda específica por fecha") #Consultar una ventas por fecha
+    print("5) Guardar datos en CSV")
+    print("6) Salir")
     opcionElegida = int(input("> "))
 
     if opcionElegida == 1: #Lista o menu con los articulos y precios que se visualiza
@@ -35,8 +39,9 @@ while True:
                 Articulo = input("Porfavor ingrese su Articulo: ").capitalize()
                 CantidadVenta = int(input("Porfavor ingrese la cantidad de articulos a vender: "))
                 PrecioVenta = int(input("Porfavor ingrese el precio del Articulo: "))
-                FechaVenta = input("Porfavor introduzca la fecha: ").lower()
-                TuplaVenta = Ventas(Articulo,CantidadVenta,PrecioVenta,FechaVenta)
+                FechaVenta = datetime.now()
+                FechaVentaFormato = FechaVenta.strftime('%d/%m/%Y a las %H:%M:%S')
+                TuplaVenta = Ventas(Articulo,CantidadVenta,PrecioVenta,FechaVentaFormato)
                 ListaVenta = list()
                 ListaVenta.append(TuplaVenta)
                 while switch:
@@ -52,9 +57,9 @@ while True:
                         Articulo = input("Porfavor ingrese el articulo que desea agregar: ").capitalize()
                         CantidadVenta = int(input("Porfavor ingrese la cantidad de articulos a vender: "))
                         PrecioVenta = int(input("Porfavor ingrese el precio del Articulo: "))
-                        TuplaVenta = Ventas(Articulo,CantidadVenta,PrecioVenta,FechaVenta)
+                        TuplaVenta = Ventas(Articulo,CantidadVenta,PrecioVenta,FechaVentaFormato)
                         ListaVenta.append(TuplaVenta)
-                        print(f"\n-- Confirmación de datos:\nfolioUnico: {folioUnico}, Articulo: {Articulo}, Cantidad: {CantidadVenta}, Precio: {PrecioVenta}, Fecha: {FechaVenta}")
+                        print(f"\n-- Confirmación de datos:\nfolioUnico: {folioUnico}, Articulo: {Articulo}, Cantidad: {CantidadVenta}, Precio: {PrecioVenta}, Fecha: {FechaVentaFormato}")
                     else:
                         DiccionarioVentas[folioUnico] = ListaVenta
                         ListaTamaño = 0
@@ -87,6 +92,17 @@ while True:
             else:
                 print("No existe La venta introducida, intente nuevamente")
 
-    if opcionElegida == 4:
+    if opcionElegida == 4: #Consultar una ventas por fecha
+        pass
+
+    if opcionElegida ==5: #Guardar datos en CSV
+        with open("venta_llantas.csv","w", newline="") as archivo:
+            grabador = csv.writer(archivo)
+            grabador.writerow(("folioUnico", "Articulo", "Cantidad", "Precio", "Fecha"))
+            grabador.writerows([(folioUnico, datos.Articulo, datos.CantidadVenta, datos.PrecioVenta, datos.FechaVenta) for folioUnico, datos in ListaVenta.items()])
+
+        print(f"\nGuardado CSV de manera correcta en {os.getcwd()}")
+
+    if opcionElegida == 6:
         print("Gracias por usar el programa, buen día.")
         break
