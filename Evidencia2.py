@@ -4,7 +4,7 @@ Evidencia 2, Estructura de datos y su procesamiento.
 from typing import List
 import pandas as pd
 from collections import namedtuple
-from datetime import datetime
+from datetime import date, datetime
 import os
 import csv
 
@@ -13,8 +13,6 @@ DiccionarioVentas = {}
 DiccionarioPrecios = {"Juego de llantas 1":[400], "Juego de llantas 2":[600]}
 notas_Precios = pd.DataFrame(DiccionarioPrecios)
 notas_ventas = pd.DataFrame(data=DiccionarioVentas)
-
-
 while True:
     print("\n-- Bienvenido(a) al Menú")
     print("1) Ver precios")#Lista o menu con los articulos y precios que se visualiza
@@ -23,8 +21,8 @@ while True:
     print("4) Búsqueda específica por fecha") #Consultar una ventas por fecha
     print("5) Guardar datos en CSV")
     print("6) Salir")
+    
     opcionElegida = int(input("> "))
-
     if opcionElegida == 1: #Lista o menu con los articulos y precios que se visualiza
         if DiccionarioPrecios:
             print(notas_Precios)
@@ -40,7 +38,7 @@ while True:
                 CantidadVenta = int(input("Porfavor ingrese la cantidad de articulos a vender: "))
                 PrecioVenta = int(input("Porfavor ingrese el precio del Articulo: "))
                 FechaVenta = datetime.now()
-                FechaVentaFormato = FechaVenta.strftime('%d/%m/%Y a las %H:%M:%S')
+                FechaVentaFormato = FechaVenta.strftime('%d/%m/%Y')
                 TuplaVenta = Ventas(Articulo,CantidadVenta,PrecioVenta,FechaVentaFormato)
                 ListaVenta = list()
                 ListaVenta.append(TuplaVenta)
@@ -71,7 +69,7 @@ while True:
                         print(f"El total con IVA aplicado es de {PrecioTotal*1.16}")
                         print ("Que le vaya bien")
                         switch = False
-
+                        
     if opcionElegida == 3: #Consultar una venta
         if DiccionarioVentas:
             folioUnicoBuscado = int(input("Ingrese La venta a buscar: "))
@@ -87,13 +85,24 @@ while True:
                 while ListaTamaño < len(DiccionarioVentas[folioUnicoBuscado]):
                     PrecioTotal = (int(DiccionarioVentas[folioUnicoBuscado][ListaTamaño].PrecioVenta)* int(DiccionarioVentas[folioUnicoBuscado][ListaTamaño].CantidadVenta))+PrecioTotal
                     ListaTamaño = ListaTamaño+1
-                print(f"total de ventas: {PrecioTotal}")
+                print(f"Total de ventas: {PrecioTotal}")
                 print(f"El total con IVA aplicado es de {PrecioTotal*1.16}")
             else:
                 print("No existe La venta introducida, intente nuevamente")
 
     if opcionElegida == 4: #Consultar una ventas por fecha
-        pass
+        print("¿Cualm es la fecha que deseas buscar?")
+        Fecha = input()    
+        print(f"Esta es tu fecha, {Fecha}")
+        for Fecha_cons in DiccionarioVentas:
+            for fecha_2 in DiccionarioVentas[Fecha_cons]:
+                if fecha_2.FechaVenta == Fecha:
+                    print ("Este es el articulo: ", fecha_2.Articulo)
+                    print ("Esta es la cantidad de articulos: ", fecha_2.CantidadVenta)
+                    print ("Este es el precio de venta: ", fecha_2.PrecioVenta)
+                    print ("Esta es la fecha: ", fecha_2.FechaVenta)
+
+
 
     if opcionElegida ==5: #Guardar datos en CSV
         with open("venta_llantas.csv","w", newline="") as archivo:
