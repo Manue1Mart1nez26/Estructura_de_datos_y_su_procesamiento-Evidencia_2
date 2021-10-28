@@ -19,10 +19,12 @@ while True:
     print("1) Ver precios")#Lista o menu con los articulos y precios que se visualiza
     print("2) Agregar una Venta") #Registrar una venta y dentro los articulos
     print("3) Búsqueda específica") #Consultar una venta
-    print("4) Búsqueda específica por fecha") #Consultar una ventas por fecha
-    print("5) Guardar datos en CSV")
-    print("6) Salir")
+    print("4) Búsqueda específica por fecha") #Consultar una ventas por fecha| el cual imprime un reporte de venta
+    print("5) Guardar datos en CSV") #Guarda en CSV
+    print("6) Salir") #Opcion de salida del programa.
+
     opcionElegida = int(input("> "))
+
     if opcionElegida == 1: #Lista o menu con los articulos y precios que se visualiza
         if DiccionarioPrecios:
             print(notas_Precios)
@@ -90,7 +92,7 @@ while True:
             else:
                 print("No existe La venta introducida, intente nuevamente")
 
-    if opcionElegida == 4: #Consultar una ventas por fecha
+    if opcionElegida == 4: #Consultar una ventas por fecha| Reporte de venta tabulado
         print("¿Cual es la fecha que deseas buscar?")
         Fecha = input()
         total = 0
