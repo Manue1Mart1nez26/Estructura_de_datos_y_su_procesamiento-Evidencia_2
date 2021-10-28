@@ -8,11 +8,12 @@ from datetime import date, datetime
 import os
 import csv
 
-Ventas = namedtuple("Ventas",["Articulo","CantidadVenta","PrecioVenta","FechaVenta"])
+Ventas = namedtuple("Ventas",["Articulo","CantidadVenta","PrecioVenta","FechaVenta", "PrecioTotal"])
 DiccionarioVentas = {}
 DiccionarioPrecios = {"Juego de llantas 1":[400], "Juego de llantas 2":[600]}
 notas_Precios = pd.DataFrame(DiccionarioPrecios)
 notas_ventas = pd.DataFrame(data=DiccionarioVentas)
+
 while True:
     print("\n-- Bienvenido(a) al Menú")
     print("1) Ver precios")#Lista o menu con los articulos y precios que se visualiza
@@ -21,7 +22,6 @@ while True:
     print("4) Búsqueda específica por fecha") #Consultar una ventas por fecha
     print("5) Guardar datos en CSV")
     print("6) Salir")
-    
     opcionElegida = int(input("> "))
     if opcionElegida == 1: #Lista o menu con los articulos y precios que se visualiza
         if DiccionarioPrecios:
@@ -39,7 +39,7 @@ while True:
                 PrecioVenta = int(input("Porfavor ingrese el precio del Articulo: "))
                 FechaVenta = datetime.now()
                 FechaVentaFormato = FechaVenta.strftime('%d/%m/%Y')
-                TuplaVenta = Ventas(Articulo,CantidadVenta,PrecioVenta,FechaVentaFormato)
+                TuplaVenta = Ventas(Articulo,CantidadVenta,PrecioVenta,FechaVentaFormato,(PrecioVenta*CantidadVenta)*1.16)
                 ListaVenta = list()
                 ListaVenta.append(TuplaVenta)
                 while switch:
@@ -55,7 +55,7 @@ while True:
                         Articulo = input("Porfavor ingrese el articulo que desea agregar: ").capitalize()
                         CantidadVenta = int(input("Porfavor ingrese la cantidad de articulos a vender: "))
                         PrecioVenta = int(input("Porfavor ingrese el precio del Articulo: "))
-                        TuplaVenta = Ventas(Articulo,CantidadVenta,PrecioVenta,FechaVentaFormato)
+                        TuplaVenta = Ventas(Articulo,CantidadVenta,PrecioVenta,FechaVentaFormato,(PrecioVenta*CantidadVenta)*1.16)
                         ListaVenta.append(TuplaVenta)
                         print(f"\n-- Confirmación de datos:\nfolioUnico: {folioUnico}, Articulo: {Articulo}, Cantidad: {CantidadVenta}, Precio: {PrecioVenta}, Fecha: {FechaVentaFormato}")
                     else:
@@ -69,7 +69,7 @@ while True:
                         print(f"El total con IVA aplicado es de {PrecioTotal*1.16}")
                         print ("Que le vaya bien")
                         switch = False
-                        
+
     if opcionElegida == 3: #Consultar una venta
         if DiccionarioVentas:
             folioUnicoBuscado = int(input("Ingrese La venta a buscar: "))
@@ -91,25 +91,37 @@ while True:
                 print("No existe La venta introducida, intente nuevamente")
 
     if opcionElegida == 4: #Consultar una ventas por fecha
-        print("¿Cualm es la fecha que deseas buscar?")
-        Fecha = input()    
-        print(f"Esta es tu fecha, {Fecha}")
+        print("¿Cual es la fecha que deseas buscar?")
+        Fecha = input()
+        total = 0
+        totalvent = 0
+        print("**** EVIDENCIA 2 ****")
+        print("Fecha: ", Fecha)
+        print("Articulo \t Cantidad \t Precio")
         for Fecha_cons in DiccionarioVentas:
             for fecha_2 in DiccionarioVentas[Fecha_cons]:
                 if fecha_2.FechaVenta == Fecha:
-                    print ("Este es el articulo: ", fecha_2.Articulo)
-                    print ("Esta es la cantidad de articulos: ", fecha_2.CantidadVenta)
-                    print ("Este es el precio de venta: ", fecha_2.PrecioVenta)
-                    print ("Esta es la fecha: ", fecha_2.FechaVenta)
-
+                    print (fecha_2.Articulo, "\t ", fecha_2.CantidadVenta, "\t\t", fecha_2.PrecioVenta)
+                    totalvent = totalvent+fecha_2.PrecioTotal
+                    total = total+1
+        print("************")
+        print(f"Total de venta es: {totalvent/1.16}")
+        print(f"El total con IVA en la venta es: {totalvent}")
+        print("************")
 
 
     if opcionElegida ==5: #Guardar datos en CSV
-        with open("venta_llantas.csv","w", newline="") as archivo:
-            grabador = csv.writer(archivo)
-            grabador.writerow(("folioUnico", "Articulo", "Cantidad", "Precio", "Fecha"))
-            grabador.writerows([(folioUnico, datos.Articulo, datos.CantidadVenta, datos.PrecioVenta, datos.FechaVenta) for folioUnico, datos in ListaVenta.items()])
-
+        dataGuardado = []
+        for i in DiccionarioVentas:
+            for item in DiccionarioVentas[i]:
+                dataGuardado.append(item)
+        print("***")
+        print(dataGuardado)
+        headerList = ["Articulo", "Cantidad", "Precio_Unitario", "Fecha_Venta", "Precio_Total"]
+        df = pd.DataFrame(dataGuardado,
+        columns = [Articulo, CantidadVenta, PrecioVenta, FechaVenta, PrecioTotal])
+        df.to_csv("evidencia2.csv", index=False, header=headerList)
+        print ("Tus datos han sido guardados")
         print(f"\nGuardado CSV de manera correcta en {os.getcwd()}")
 
     if opcionElegida == 6:
